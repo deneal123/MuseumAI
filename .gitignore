@@ -1,0 +1,6 @@
+/cudnn_windows/
+/inference/
+/temp/
+/venv/
+/weights/
+/setup.log

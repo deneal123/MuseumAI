@@ -1,0 +1,34 @@
+{
+    "script_path": "C:\\Users\\NightMare\\PycharmProjects\\MuseumAI",
+    "path_to_temp": "C:\\Users\\NightMare\\PycharmProjects\\MuseumAI\\temp",
+    "path_to_inference": "C:\\Users\\NightMare\\PycharmProjects\\MuseumAI\\inference",
+    "path_to_weights": "C:\\Users\\NightMare\\PycharmProjects\\MuseumAI\\weights",
+    "dir_paths": {
+        "script_path": "script_path",
+        "path_to_temp": "path_to_temp",
+        "path_to_inference": "path_to_inference",
+        "path_to_weights": "path_to_weights"
+    },
+    "uploaded_images": null,
+    "start_time": null,
+    "end_time": null,
+    "execution_time": null,
+    "progress": null,
+    "dir_params": {
+        "uploaded_images": "uploaded_images",
+        "start_time": "start_time",
+        "end_time": "end_time",
+        "execution_time": "execution_time",
+        "progress": "progress"
+    },
+    "name_uploaded_images": [],
+    "name_uploaded_images_without_ex": [],
+    "dir_lists": {
+        "name_uploaded_images": "name_uploaded_images",
+        "name_uploaded_images_without_ex": "name_uploaded_images_without_ex"
+    },
+    "dir_data": {},
+    "dir_dirs": {
+        "dir_data": "dir_data"
+    }
+}
