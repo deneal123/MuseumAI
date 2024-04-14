@@ -2,7 +2,6 @@
 /inference/
 /temp/
 /venv/
-/weights/
 /setup.log
 /cachedir/
 /class_labels/
