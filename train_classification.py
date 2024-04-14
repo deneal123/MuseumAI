@@ -235,11 +235,11 @@ class ImageClassifierTrainer:
 
         self.model.to(self.device)
 
-        self.optimizer = bnb.optim.Adam8bit(self.model.parameters(), lr=0.00001, betas=(0.9, 0.999))
+        self.optimizer = bnb.optim.AdamW8bit(self.model.parameters(), lr=0.0001, betas=(0.9, 0.999))
         # Создание объекта LossBasedLRScheduler
         self.scheduler = LossBasedLRScheduler(self.optimizer, factor=0.98, patience=3, threshold=0.01, min_lr=0)
 
-        # Веса для каждого класса
+        """# Веса для каждого класса
         class_weights = {
             '5': 0.6697942386831276, '3': 0.8908593322386426, '0': 0.8974910394265233,
             '8': 0.9064884433305486, '13': 0.9172161172161172, '14': 0.9321878579610539,
@@ -249,8 +249,8 @@ class ImageClassifierTrainer:
         }
 
         # Преобразование весов в тензор и перемещение на устройство (GPU или CPU)
-        weights = torch.tensor(list(class_weights.values())).to(self.device)
-        self.criterion = torch.nn.CrossEntropyLoss(weight=weights)
+        weights = torch.tensor(list(class_weights.values())).to(self.device)"""
+        self.criterion = torch.nn.CrossEntropyLoss()
 
     def _compute_accuracy(self, predictions, labels):
         _, predicted = torch.max(predictions, 1)
@@ -469,7 +469,7 @@ class ImageClassifierTrainer:
                 save_path = os.path.join(fig_path,
                                          f"{self.timestamp}_{self.selected_model}_{batch_idx + 1}_test.png")
 
-                plt.savefig(save_path, format='png', dpi=300)
+                plt.savefig(save_path, format='png', dpi=500)
                 plt.tight_layout()
                 plt.close()
 
@@ -573,16 +573,16 @@ class ImageClassifierTrainer:
         self._plot_final_plot()
 
 
-# test_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/test_df"
-test_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/test_df_check"
-# train_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/train_df"
-train_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/train_df_check"
+test_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/test_df"
+# test_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/test_df_check"
+train_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/train_df"
+# train_dir = "C:/Users/NightMare/PycharmProjects/MuseumAI/data_with_class/train_dataset_mincult-train/train_df_check"
 train = ImageClassifierTrainer(img_w=224,
                                img_h=224,
                                n_class=15,
                                img_channels=3,
-                               num_epoch=1,
-                               batch_size=1,
+                               num_epoch=5,
+                               batch_size=5,
                                model='EfficientNetB3',
                                test_dir=test_dir,
                                train_dir=train_dir)

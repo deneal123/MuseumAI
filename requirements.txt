@@ -14,3 +14,5 @@ einops
 efficientnet_pytorch
 datasets
 transformers
+fastapi
+mysql-connector-python

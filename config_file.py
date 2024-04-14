@@ -2,6 +2,7 @@ import os
 import json
 from library.custom_logging import setup_logging
 
+
 # Назначение переменной логирования
 log = setup_logging()
 
@@ -21,6 +22,8 @@ def save_default_config():
         "path_to_temp": None,
         "path_to_inference": None,
         "path_to_weights": None,
+        "path_to_database": None,
+        "path_to_class_labels": None,
 
 
         "dir_paths": {
@@ -29,6 +32,8 @@ def save_default_config():
             "path_to_temp": "path_to_temp",
             "path_to_inference": "path_to_inference",
             "path_to_weights": "path_to_weights",
+            "path_to_database": "path_to_database",
+            "path_to_class_labels": "path_to_class_labels"
 
         },
 
@@ -37,6 +42,16 @@ def save_default_config():
         "end_time": None,
         "execution_time": None,
         "progress": None,
+        "device": None,
+        "n_class": 15,
+        "model": None,
+        "preprocess": None,
+        "class_to_labels": None,
+        "predict_class": None,
+        "df": None,
+        "visualise_cont": None,
+        "path_to_df": None,
+        "path_to_image": None,
 
         "dir_params": {
 
@@ -45,6 +60,15 @@ def save_default_config():
             "end_time": "end_time",
             "execution_time": "execution_time",
             "progress": "progress",
+            "device": "device",
+            "n_class": "n_class",
+            "model": "model",
+            "class_to_labels": "class_to_labels",
+            "predict_class": "predict_class",
+            "df": "df",
+            "visualise_cont": "visualise_cont",
+            "path_to_df": "path_to_df",
+            "path_to_image": "path_to_image"
 
         },
 
@@ -189,6 +213,8 @@ def default_path():
         "path_to_temp": "temp",
         "path_to_inference": "inference",
         "path_to_weights": "weights",
+        "path_to_database": "database",
+        "path_to_class_labels": "class_labels"
 
     }
 
