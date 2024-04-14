@@ -4,3 +4,10 @@
 /venv/
 /weights/
 /setup.log
+/cachedir/
+/class_labels/
+/data_with_class/
+/data_with_description/
+/logs/
+/plot/
+/test/

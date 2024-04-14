@@ -9,4 +9,8 @@ stqdm==0.0.5
 streamlit==1.32.2
 streamlit-lottie==0.0.5
 tqdm==4.66.2
-ultralytics==8.1.36
+matplotlib==3.7.2
+einops
+efficientnet_pytorch
+datasets
+transformers

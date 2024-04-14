@@ -4,7 +4,6 @@ from library.IndentationHelper import IndentationHelper
 from config_file import load_config, is_value_changed, save_config
 from PIL import Image, ImageDraw, ImageFont
 import string
-from ultralytics import YOLO
 import os
 import torchvision.transforms as transforms
 from tensorflow.keras.utils import load_img, img_to_array
@@ -161,7 +160,7 @@ class PageTools:
         # Загрузка изображения через Streamlit
         self.uploaded_images = self.cont_load_images.file_uploader("Загрузите изображение",
                                                                    type=["jpg", "png", "jpeg", "tiff"],
-                                                                   accept_multiple_files=False)
+                                                                   accept_multiple_files=True)
 
         self.cont_load_images.divider()
 

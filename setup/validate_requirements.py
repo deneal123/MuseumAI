@@ -5,7 +5,7 @@ import shutil
 import argparse
 import setup_common
 
-# Получить абсолютный путь к каталогу текущего файла (каталог проекта)
+# Получить абсолютный путь к каталогу текущего файла (каталог проекта cv_semantic_segmentation)
 project_directory = os.path.dirname(os.path.abspath(__file__))
 
 # Проверка, присутствует ли каталог «setup» в каталоге проекта.
@@ -21,47 +21,54 @@ from library.custom_logging import setup_logging
 # Настройка ведения журнала
 log = setup_logging()
 
-
-def check_tensorflow():
-    # Проверка наличия CUDA или ROCm
+def check_torch():
+    # Проверка nVidia toolkit or AMD toolkit
     if shutil.which('nvidia-smi') is not None or os.path.exists(
-            os.path.join(
-                os.environ.get('SystemRoot') or r'C:\Windows',
-                'System32',
-                'nvidia-smi.exe',
-            )
+        os.path.join(
+            os.environ.get('SystemRoot') or r'C:\Windows',
+            'System32',
+            'nvidia-smi.exe',
+        )
     ):
         log.info('nVidia toolkit обнаружен')
     elif shutil.which('rocminfo') is not None or os.path.exists(
-            '/opt/rocm/bin/rocminfo'
+        '/opt/rocm/bin/rocminfo'
     ):
         log.info('AMD toolkit обнаружен')
     else:
-        log.info('Подключение только CPU TensorFlow')
+        log.info('Подключение только CPU Torch')
 
     try:
-        # Проверка наличия TensorFlow
-        import tensorflow as tf
+        import torch
 
-        log.info(f'TensorFlow {tf.__version__}')
+        log.info(f'Torch {torch.__version__}')
 
-        # Проверка доступности GPU
-        if not tf.config.list_physical_devices('GPU'):
-            log.warning('TensorFlow сообщил, что GPU не доступен')
+        # Проверка доступен ли CUDA
+        if not torch.cuda.is_available():
+            log.warning('Torch сообщил, что CUDA не доступен')
         else:
-            # Информация о доступных устройствах
-            for index, device in enumerate(tf.config.list_physical_devices('GPU')):
-                log.info(f'TensorFlow обнаружил устройство: {device.name}')
+            if torch.version.cuda:
+                # Информация версии nVidia CUDA and cuDNN
+                log.info(
+                    f'Torch backend: nVidia CUDA {torch.version.cuda} cuDNN {torch.backends.cudnn.version() if torch.backends.cudnn.is_available() else "N/A"}'
+                )
+            elif torch.version.hip:
+                # Информация версии AMD ROCm HIP
+                log.info(f'Torch backend: AMD ROCm HIP {torch.version.hip}')
+            else:
+                log.warning('Неизвестный Torch backend')
 
-                # Получение информации о GPU
-                if 'GPU' in device.name:
-                    details = tf.config.experimental.get_device_details(device)
-                    log.info(f"Имя устройства: {details.get('device_name')}")
-        return 2
-
+            # Информация о GPUs
+            for device in [
+                torch.cuda.device(i) for i in range(torch.cuda.device_count())
+            ]:
+                log.info(
+                    f'Torch обнаружил GPU: {torch.cuda.get_device_name(device)} VRAM {round(torch.cuda.get_device_properties(device).total_memory / 1024 / 1024)} Arch {torch.cuda.get_device_capability(device)} Cores {torch.cuda.get_device_properties(device).multi_processor_count}'
+                )
+                return int(torch.__version__[0])
     except Exception as e:
-        log.error(f'Невозможно загрузить tensorflow: {e}')
-        return 0
+        log.error(f'Невозможно загрузить torch: {e}')
+        sys.exit(1)
 
 
 def main():
@@ -79,14 +86,16 @@ def main():
     parser.add_argument('--debug', action='store_true', help='Debug on')
     args = parser.parse_args()
 
-    tensorflow_ver = check_tensorflow()
-    setup_common.install_requirements('requirements.txt', check_no_verify_flag=True)
-
+    torch_ver = check_torch()
+    
     if args.requirements:
         setup_common.install_requirements(args.requirements, check_no_verify_flag=True)
     else:
-        if tensorflow_ver == 0:
-            setup_common.install_requirements('requirements_windows_tensorflow.txt', check_no_verify_flag=True)
+        if torch_ver == 1:
+            setup_common.install_requirements('requirements_windows_torch1.txt', check_no_verify_flag=True)
+        else:
+            setup_common.install_requirements('requirements_windows_torch2.txt', check_no_verify_flag=True)
+
 
 
 if __name__ == '__main__':

@@ -112,6 +112,55 @@ def git(arg: str, folder: str = None, ignore: bool = False):
             log.error(f'Обнаружены локальные изменения: подробности смотрите в журнале...')
         log.debug(f'Git output: {txt}')
 
+def check_torch():
+    # Проверка nVidia toolkit or AMD toolkit
+    if shutil.which('nvidia-smi') is not None or os.path.exists(
+        os.path.join(
+            os.environ.get('SystemRoot') or r'C:\Windows',
+            'System32',
+            'nvidia-smi.exe',
+        )
+    ):
+        log.info('nVidia toolkit обнаружен')
+    elif shutil.which('rocminfo') is not None or os.path.exists(
+        '/opt/rocm/bin/rocminfo'
+    ):
+        log.info('AMD toolkit обнаружен')
+    else:
+        log.info('Подключение только CPU Torch')
+
+    try:
+        import torch
+
+        log.info(f'Torch {torch.__version__}')
+
+        # Проверка доступен ли CUDA
+        if not torch.cuda.is_available():
+            log.warning('Torch сообщил, что CUDA не доступен')
+        else:
+            if torch.version.cuda:
+                # Информация версии nVidia CUDA and cuDNN
+                log.info(
+                    f'Torch backend: nVidia CUDA {torch.version.cuda} cuDNN {torch.backends.cudnn.version() if torch.backends.cudnn.is_available() else "N/A"}'
+                )
+            elif torch.version.hip:
+                # Информация версии AMD ROCm HIP
+                log.info(f'Torch backend: AMD ROCm HIP {torch.version.hip}')
+            else:
+                log.warning('Неизвестный Torch backend')
+
+            # Информация о GPUs
+            for device in [
+                torch.cuda.device(i) for i in range(torch.cuda.device_count())
+            ]:
+                log.info(
+                    f'Torch обнаружил GPU: {torch.cuda.get_device_name(device)} VRAM {round(torch.cuda.get_device_properties(device).total_memory / 1024 / 1024)} Arch {torch.cuda.get_device_capability(device)} Cores {torch.cuda.get_device_properties(device).multi_processor_count}'
+                )
+                return int(torch.__version__[0])
+    except Exception as e:
+        # log.warning(f'Невозможно импортировать Torch: {e}')
+        return 0
+
 
 def pip(arg: str, ignore: bool = False, quiet: bool = False, show_stdout: bool = False):
     # arg = arg.replace('>=', '==')
