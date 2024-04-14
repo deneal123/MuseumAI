@@ -40,4 +40,4 @@ git clone https://github.com/deneal123/MuseumAI.git
 
 ### Лицензия
 
-Этот проект распространяется под лицензией [Commercial License](LICENSE).
+Этот проект распространяется под лицензией Apache 2.0
